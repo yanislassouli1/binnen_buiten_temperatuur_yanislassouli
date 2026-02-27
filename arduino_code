@@ -1,0 +1,49 @@
+#include <Wire.h>
+#include <Adafruit_BMP280.h>
+#include <LiquidCrystal_I2C.h>
+
+Adafruit_BMP280 bmp;
+LiquidCrystal_I2C lcd(0x27,16,2);  
+
+const int lm335Pin = A1;
+float offsetLM335 = 6.0;  // kalibratie 
+
+void setup() {
+  Serial.begin(9600);
+
+  if(!bmp.begin(0x76)) {
+    Serial.println("BMP280 Sensor niet gevonden!");
+    while(1);
+  }
+
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop() {
+  float tempBinnen = bmp.readTemperature();
+
+  int raw = analogRead(lm335Pin);
+  float voltage = raw * (5.0 / 1023.0);
+  float tempBuiten = voltage * 100.0 - 273.15 + offsetLM335;
+
+  Serial.print("Binnen (BMP280): ");
+  Serial.print(tempBinnen,1);
+  Serial.print(" °C | Buiten (LM335): ");
+  Serial.println(tempBuiten,1);
+
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Binnen:");
+  lcd.print(tempBinnen,1);
+  lcd.print((char)223);
+  lcd.print("C");
+
+  lcd.setCursor(0,1);
+  lcd.print("Buiten:");
+  lcd.print(tempBuiten,1);
+  lcd.print((char)223);
+  lcd.print("C");
+
+  delay(2000);
+}
