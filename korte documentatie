@@ -1,0 +1,9 @@
+Binnen/Buiten thermometer
+
+Ik heb een BMP280 sensor gebruikt om de binnentemperatuur te meten.
+
+Ik heb een LM335 sensor gebruikt om de buitentemperatuur te meten.
+
+Beide sensoren sturen hun temperatuur naar een I²C LCD 16x2, zodat je ze kan aflezen.
+
+Arduino Uno wordt gebruikt als microcontroller om alles uit te lezen en te tonen.
